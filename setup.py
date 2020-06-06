@@ -11,7 +11,7 @@ setup(
     version='1.0',
     description='An auto downloader and uploader for TikTok videos.',
     long_description=long_description,
-	long_description_content_type='text/x-rst',
+    long_description_content_type='text/x-rst',
     url='https://github.com/Coloradohusky/TikUp',
     author='Coloradohusky',
     py_modules=['tikup'],
