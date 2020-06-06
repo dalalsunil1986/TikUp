@@ -15,5 +15,5 @@ setup(
     author='Coloradohusky',
     py_modules=['tikup'],
     python_requires='>=3.5, <4',
-    install_requires=['internetarchive>=1.9.3', 'TikTokApi>=3.1.3']
+    install_requires=['internetarchive>=1.9.3', 'TikTokApi>=3.1.3', 'youtube-dl>=2020.06.06']
 )
