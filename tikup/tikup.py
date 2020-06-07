@@ -4,6 +4,7 @@ import youtube_dl
 from internetarchive import upload
 from internetarchive import get_item
 import argparse
+import re
 
 def downloadTikTok(username, tiktok, cwd):
     ydl_opts = {
@@ -51,13 +52,14 @@ def uploadUser(username, deletionStatus):
         uploadTikTok(username, tiktok, deletionStatus)
 
 def uploadTikTok(username, tiktok, deletionStatus):
-    if (os.path.isdir(tiktok) and tiktok != 'tmp'):
+    regex = re.compile('[0-9]{19}')
+    if (os.path.isdir(tiktok) and regex.match(str(tiktok))):
         item = get_item('tiktok-' + tiktok)
         try:
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.1'), retries=9001, retries_sleep=60)        
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.06'), retries=9001, retries_sleep=60)        
         except:
             print('An error occurred, trying again.')
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.1'), retries=9001, retries_sleep=60)
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.06'), retries=9001, retries_sleep=60)
         if (deletionStatus == True):
             os.rmdir(tiktok)
         print ()
