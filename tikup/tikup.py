@@ -54,10 +54,10 @@ def uploadTikTok(username, tiktok, deletionStatus):
     if (os.path.isdir(tiktok) and tiktok != 'tmp'):
         item = get_item('tiktok-' + tiktok)
         try:
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.0'), retries=9001, retries_sleep=60)        
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.1'), retries=9001, retries_sleep=60)        
         except:
             print('An error occurred, trying again.')
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.0'), retries=9001, retries_sleep=60)
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 1.1'), retries=9001, retries_sleep=60)
         if (deletionStatus == True):
             os.rmdir(tiktok)
         print ()
