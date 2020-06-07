@@ -2,3 +2,4 @@
 /dist/
 /tikup.egg-info/
 /build/
+/tikup/*/

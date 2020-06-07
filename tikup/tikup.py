@@ -37,34 +37,31 @@ def downloadTikTok(username, tiktok, cwd):
             os.rename(i, base + '.mp4')
     os.chdir(cwd)
 
-def downloadUser(username):
-    api = TikTokApi()
-    count = 9999
-    tiktoks = api.byUsername(username, count=count)
-    cwd = os.getcwd()
-    for tiktok in tiktoks:
-        downloadTikTok(username, tiktok, cwd)
-
-
-def uploadUser(username, deletionStatus):
-    dirs = os.listdir()
-    for tiktok in dirs:
-        uploadTikTok(username, tiktok, deletionStatus)
-
 def uploadTikTok(username, tiktok, deletionStatus):
     regex = re.compile('[0-9]{19}')
     if (os.path.isdir(tiktok) and regex.match(str(tiktok))):
         item = get_item('tiktok-' + tiktok)
         try:
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.06'), retries=9001, retries_sleep=60)        
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.07'), retries=9001, retries_sleep=60)        
         except:
             print('An error occurred, trying again.')
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.06'), retries=9001, retries_sleep=60)
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.07'), retries=9001, retries_sleep=60)
         if (deletionStatus == True):
             os.rmdir(tiktok)
         print ()
         print ('Uploaded to https://archive.org/details/tiktok-' + username + '-' + tiktok)
         print ()
+
+def downloadUser(username):
+    api = TikTokApi()
+    count = 9999
+    tiktoks = api.byUsername(username, count=count)
+    cwd = os.getcwd()
+    ids = []
+    for tiktok in tiktoks:
+        downloadTikTok(username, tiktok, cwd)
+        ids.append(tiktok['id'])
+    return ids
 
 def downloadHashtag(hashtag, deletionStatus):
     api = TikTokApi()
@@ -78,20 +75,24 @@ def downloadHashtag(hashtag, deletionStatus):
         usernames.append(username + ':' + tiktok['itemInfos']['id'])
     return usernames
 
+def main():
+    parser = argparse.ArgumentParser(description='An auto downloader and uploader for Instagram profiles.')
+    parser.add_argument('user')
+    parser.add_argument('--no-delete', action='store_false', help="don't delete files when done")
+    parser.add_argument('--hashtag', action='store_true', help="download hashtag instead of username")
+    args = parser.parse_args()
+    username = args.user
+    delete = args.no_delete
+    if (args.hashtag == True):
+        names = downloadHashtag(username, delete)
+        print (names)
+        for name in names:
+            splitName = name.split(':')
+            uploadTikTok(splitName[0], splitName[1], delete)
+    else:
+        tiktoks = downloadUser(username)
+        for tiktok in tiktoks:
+            uploadTikTok(username, tiktok, delete)
 
-parser = argparse.ArgumentParser(description='An auto downloader and uploader for Instagram profiles.')
-parser.add_argument('user')
-parser.add_argument('--no-delete', action='store_false', help="don't delete files when done")
-parser.add_argument('--hashtag', action='store_true', help="download hashtag instead of username")
-args = parser.parse_args()
-username = args.user
-delete = args.no_delete
-if (args.hashtag == True):
-    names = downloadHashtag(username, delete)
-    print (names)
-    for name in names:
-        splitName = name.split(':')
-        uploadTikTok(splitName[0], splitName[1], delete)
-else:
-    downloadUser(username)
-    uploadUser(username, delete)
+if __name__ == "__main__":
+    main()
