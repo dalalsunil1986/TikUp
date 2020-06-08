@@ -42,19 +42,23 @@ def uploadTikTok(username, tiktok, deletionStatus):
     if (os.path.isdir(tiktok) and regex.match(str(tiktok))):
         item = get_item('tiktok-' + tiktok)
         try:
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.07'), retries=9001, retries_sleep=60)        
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.08'), retries=9001, retries_sleep=60)        
         except:
             print('An error occurred, trying again.')
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.07'), retries=9001, retries_sleep=60)
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.08'), retries=9001, retries_sleep=60)
         if (deletionStatus == True):
             os.rmdir(tiktok)
         print ()
-        print ('Uploaded to https://archive.org/details/tiktok-' + username + '-' + tiktok)
+        print ('Uploaded to https://archive.org/details/tiktok-' + tiktok)
         print ()
 
-def downloadUser(username):
+def downloadUser(username, limit):
     api = TikTokApi()
-    count = 9999
+    if limit != None:
+        count = int(limit)
+    else:
+        count = 9999
+    print (count)
     tiktoks = api.byUsername(username, count=count)
     cwd = os.getcwd()
     ids = []
@@ -63,9 +67,13 @@ def downloadUser(username):
         ids.append(tiktok['id'])
     return ids
 
-def downloadHashtag(hashtag, deletionStatus):
+def downloadHashtag(hashtag, limit):
     api = TikTokApi()
-    count = 9999
+    if limit != None:
+        count = int(limit)
+    else:
+        count = 9999
+    print (count)
     tiktoks = api.byHashtag(hashtag, count=count)
     usernames = []
     cwd = os.getcwd()
@@ -80,17 +88,18 @@ def main():
     parser.add_argument('user')
     parser.add_argument('--no-delete', action='store_false', help="don't delete files when done")
     parser.add_argument('--hashtag', action='store_true', help="download hashtag instead of username")
+    parser.add_argument('--limit', help="set limit on amount of TikToks to download")
     args = parser.parse_args()
     username = args.user
     delete = args.no_delete
+    limit = args.limit
     if (args.hashtag == True):
-        names = downloadHashtag(username, delete)
-        print (names)
+        names = downloadHashtag(username, limit)
         for name in names:
             splitName = name.split(':')
             uploadTikTok(splitName[0], splitName[1], delete)
     else:
-        tiktoks = downloadUser(username)
+        tiktoks = downloadUser(username, limit)
         for tiktok in tiktoks:
             uploadTikTok(username, tiktok, delete)
 
