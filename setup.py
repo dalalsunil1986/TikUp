@@ -8,7 +8,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name='tikup',
-    version='2020.06.09',
+    version='2020.06.10',
     description='An auto downloader and uploader for TikTok videos.',
     long_description=long_description,
     long_description_content_type='text/x-rst',

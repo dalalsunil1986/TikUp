@@ -44,10 +44,10 @@ def uploadTikTok(username, tiktok, deletionStatus, file):
     if (os.path.isdir(tiktok) and (regex.match(str(tiktok)) or (regexA.match(str(tiktok))) or (regexB.match(str(tiktok))))):
         item = get_item('tiktok-' + tiktok)
         try:
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.09'), retries=9001, retries_sleep=60)        
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.10'), retries=9001, retries_sleep=60)        
         except:
             print('An error occurred, trying again.')
-            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.09'), retries=9001, retries_sleep=60)
+            item.upload('./' + tiktok + '/', verbose=True, checksum=True, delete=deletionStatus, metadata=dict(collection='opensource_media', subject='tiktok', creator=username, title='TikTok Video by ' + username, originalurl='https://www.tiktok.com/@' + username + '/video/' + tiktok, scanner='TikUp 2020.06.10'), retries=9001, retries_sleep=60)
         if (deletionStatus == True):
             os.rmdir(tiktok)
         print ()
@@ -57,9 +57,12 @@ def uploadTikTok(username, tiktok, deletionStatus, file):
         file.write('\n')
 
 def downloadUser(username, limit, file):
-    lines = file.readlines()
-    for x in range(0, len(lines) - 1):
-        lines[x] = lines[x].replace('\n', '')
+    try:
+        lines = file.readlines()
+        for x in range(0, len(lines) - 1):
+            lines[x] = lines[x].replace('\n', '')
+    except:
+        lines = ''
     api = TikTokApi()
     if limit != None:
         count = int(limit)
@@ -141,8 +144,12 @@ def main():
             for tiktok in tiktoks:
                 uploadTikTok(username, tiktok, delete, file)
         except:
-            return
-    file.close()
+            pass
+    try:
+        file.close()
+    except:
+        pass
+    print('')
 
 if __name__ == "__main__":
     main()
